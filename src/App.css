@@ -62,3 +62,23 @@ body {
   width: 100%;
   font-size: 18px;
 }
+
+.err-msg {
+  margin: 0px;
+  color: red;
+  font-size: 15px;
+}
+
+.login-title {
+  display: flex;
+  /* flex: auto;s */
+  /* flex-direction: row; */
+  /* justify-content: space-around; */
+  align-items:center;
+}
+
+.img-lock {
+  height: 35px;
+  width: 35px;
+  margin-right: 10px;
+}
