@@ -1,65 +1,74 @@
 import "./login_view.css"
 import { Component } from "react";
+import { userCredential } from "./userCredential";
+import { Button, Card, FloatingLabel, Form } from "react-bootstrap";
 
-class Login extends Component {
+class LoginView extends Component {
     constructor(props) {
         super(props)
         this.state = {
             username : '',
             password : '',
-            usernameValid : false,
-            passwordValid : false,
-            usernameErrorMsg : '',
-            passwordErrorMsg : '',
-
+            isValid: false,
+            userNameTouched: false,
+            passwordTouched: false,
+            errorName: {email: '', password: ''}
         }
     }
 
     handleUsernameChange = (event) => {
-        var validRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (event.target.value.match(validRegex)) {
+        var validRegex = '([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\\.[A-Z|a-z]{2,})+';
+        const email = event.target.value;
+        if (email.match(validRegex)) {
             this.setState({
-                username : event.target.value,
-                usernameValid : true,
-                usernameErrorMsg : ''
-            })
+                username: email,
+                errorName: {...this.state.errorName, email: ''},
+                userNameTouched: true
+            }, this.validate);
         } else {
             this.setState({
-                usernameValid : false,
-                usernameErrorMsg : `email requires '@'`
-            })
+                errorName: {...this.state.errorName, email: 'Invalid email format'}
+            }, this.validate);
         }
     }
 
     handlePasswordChange = (event) => {
-        if (event.target.value.length > 5) {
+        const userPassword = event.target.value;
+        if (userPassword.length > 5) {
             this.setState({
-                username : event.target.value,
-                usernameValid : true,
-                usernameErrorMsg : ''
-            })
+                password: userPassword,
+                errorName: {...this.state.errorName, password: ''},
+                passwordTouched: true
+            }, this.validate);
         } else {
             this.setState({
-                usernameValid : false,
-                usernameErrorMsg : `password must be 6 characters length`
-            })
+                errorName: {...this.state.errorName, password: '6 min length'}
+            }, this.validate);
         }
-    }
+    };
 
     handleSubmit = (event) => {
-        event.preventDefault();
-        if (this.state.usernameValid && this.state.passwordValid) {
-            if (this.state.username === 'admin@example.com' && this.state.password === '12345678') {
-                alert(`login successfull!`)
-            } else {
-                alert(`Login failed! check your username or password!`)
-            }
+        const {username, password} = this.state;
+        this.props.onLogin(userCredential(username, password));
+        event.preventDefault()
+    };
+
+    validate = () => {
+        const {errorName, userNameTouched, passwordTouched} = this.state;
+        if (errorName.email.length > 0 || errorName.password.length > 0 ||
+            !userNameTouched || !passwordTouched) {
+            this.setState({
+                isValid: false
+            })
         } else {
-            alert(`Login failed! username or password must suit the criteria`)
+            this.setState({
+                isValid: true
+            })
         }
     }
 
     render() {
+        const {errorName, isValid} = this.state;
         return (
             <>
                 <div className='main-container'>
@@ -68,23 +77,33 @@ class Login extends Component {
                         <p>Warung Makan Bahari</p>
                     </div>
                     <div className='login'>
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="login-title">
-                                <img className="img-lock" src="https://cdn-icons-png.flaticon.com/512/61/61457.png" alt=""/>
-                                <h1>Login Page</h1>
-                            </div>
-                            <p>Username</p>
-                            <input type="text" name="Username" id="username" onChange={this.handleUsernameChange}/>
-                            <div className="err-msg">{this.state.usernameErrorMsg}</div>
-                            
-                            <p>Password</p>
-                            <input type="password"/>
-                            <div className="err-msg">{this.state.passwordErrorMsg}</div>
-
-                            <br/>
-
-                            <button type="submit">Login</button>
-                        </form>
+                        <Card.Body>
+                            <Card.Title><h2>Login</h2></Card.Title>
+                            <Form onSubmit={this.handleSubmit}>
+                                <Form.Group className="form-floating mb-3">
+                                    <FloatingLabel label='Email'>
+                                        <Form.Control size="lg" type="email" placeholder="enter email"
+                                                        onChange={this.handleUsernameChange}/>
+                                    </FloatingLabel>
+                                    <Form.Text className="text-danger">
+                                        {errorName.email}
+                                    </Form.Text>
+                                </Form.Group>
+                                <Form.Group className="form-floating mb-3">
+                                    <FloatingLabel label='Password'>
+                                        <Form.Control size="lg" type="password" placeholder="enter password"
+                                                        onChange={this.handlePasswordChange}/>
+                                    </FloatingLabel>
+                                    <Form.Text className="text-danger">
+                                        {errorName.password}
+                                    </Form.Text>
+                                </Form.Group>
+                                <div className="d-grid">
+                                    <Button size="lg" variant="primary" type="submit"
+                                            disabled={!isValid}>Login</Button>
+                                </div>
+                            </Form>
+                        </Card.Body>
                     </div>
                 </div>
             </>
@@ -92,4 +111,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default LoginView;

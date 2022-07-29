@@ -36,7 +36,7 @@ class MenuAdd extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const {menuId, menuName, menuPrice} = this.state;
-        this.menuService.addNewMenu(menu(menuId, menuName, menuPrice));
+        this.MenuService.addNewMenu(menu(menuId, menuName, menuPrice));
         this.props.onCancelForm();
     }
 
@@ -48,7 +48,7 @@ class MenuAdd extends Component {
         }
     }
 
-    menuService = () => {
+    MenuService = () => {
         const menus = [
             menu('001', 'Nasi Putih', 3000),
             menu('002', 'Nasi Merah', 6000),

@@ -5,8 +5,8 @@ html, body {
   padding: 0;
 }
 body {
-  /* background-image: url("./assets/images/background.jpg"); */
-  margin: 100px 50px;
+  background-image: url("./background.jpg");
+  /* margin: 100px 50px; */
   background-size: cover;
 }
 
