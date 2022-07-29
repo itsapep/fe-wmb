@@ -23,6 +23,16 @@ class MenuAdd extends Component {
         return menus;
     }
 
+    static deleteMenu = (menuId) => {
+        const newListMenus = menus.filter(data => data.menuId !== menuId);
+        while (menus.length > 0) {
+            menus.pop();
+        }
+        for (let i = 0; i < newListMenus.length; i++) {
+            menus.push(newListMenus[i])
+        }
+    }
+
     addNewMenu = (newMenu) => {
         menus.push(newMenu);
     }

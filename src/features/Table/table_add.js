@@ -24,6 +24,16 @@ class TableAdd extends Component {
     static showAll = () => {
         return tables;
     }
+
+    static deleteTable = (tableId) => {
+        const newListTables = tables.filter(data => data.tableId !== tableId);
+        while (tables.length > 0) {
+            tables.pop();
+        }
+        for (let i = 0; i < newListTables.length; i++) {
+            tables.push(newListTables[i])
+        }
+    }
     
     addNewTable = (newTable) => {
         tables.push(newTable);
