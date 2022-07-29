@@ -48,7 +48,7 @@ class Login extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.usernameValid && this.state.passwordValid) {
-            if (this.state.username === 'test@mail.com' && this.state.password === '123456') {
+            if (this.state.username === 'admin@example.com' && this.state.password === '12345678') {
                 alert(`login successfull!`)
             } else {
                 alert(`Login failed! check your username or password!`)
@@ -63,8 +63,8 @@ class Login extends Component {
             <>
                 <div className='main-container'>
                     <div className='banner'>
-                        <h1>SMM Batch 2</h1>
-                        <p>Front End Hands On</p>
+                        <h1>WMB</h1>
+                        <p>Warung Makan Bahari</p>
                     </div>
                     <div className='login'>
                         <form onSubmit={this.handleSubmit}>

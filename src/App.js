@@ -1,11 +1,14 @@
 // import logo from './logo.svg';
 import './App.css';
-import Login from './component/login';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import DashboardView from './features/dashboard_view';
+import Login from './shared/component/login_view';
 
 function App() {
   return (
     <>
-      <Login/>
+      {/* <Login/> */}
+      <DashboardView/>
     </>
   );
 }
