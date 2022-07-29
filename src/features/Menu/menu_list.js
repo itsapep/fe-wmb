@@ -7,11 +7,12 @@ import MenuAdd from "./menu_add";
 class MenuList extends Component {
     constructor(props) {
         super(props)
-        this.menuService = MenuAdd.MenuService()
+        this.state = {
+        }
     }
 
     render() {
-        const menus = this.MenuService.showAll();
+        const menus = MenuAdd.showAll();
         return (
             <Container className="p-3">
                 <div className="d-flex justify-content-between">

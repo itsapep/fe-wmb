@@ -3,7 +3,11 @@ import { Button, Card, Container, Form} from "react-bootstrap";
 import menu from "./menu";
 
 
-
+let menus = [
+    menu('001', 'Nasi Putih', 3000),
+    menu('002', 'Nasi Merah', 6000),
+    menu('003', 'Nasi Kuning', 10000),
+];
 class MenuAdd extends Component {
     constructor(props) {
         super(props)
@@ -13,6 +17,14 @@ class MenuAdd extends Component {
             menuPrice: '',
             isValid: false
         }
+    }
+
+    static showAll = () => {
+        return menus;
+    }
+
+    addNewMenu = (newMenu) => {
+        menus.push(newMenu);
     }
 
     handleChangeId = (e) => {
@@ -36,7 +48,7 @@ class MenuAdd extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const {menuId, menuName, menuPrice} = this.state;
-        this.MenuService.addNewMenu(menu(menuId, menuName, menuPrice));
+        this.addNewMenu(menu(menuId, menuName, menuPrice));
         this.props.onCancelForm();
     }
 
@@ -47,24 +59,7 @@ class MenuAdd extends Component {
             this.setState({isValid: false})
         }
     }
-
-    MenuService = () => {
-        const menus = [
-            menu('001', 'Nasi Putih', 3000),
-            menu('002', 'Nasi Merah', 6000),
-            menu('003', 'Nasi Kuning', 10000),
-        ];
-        const showAll = () => {
-            return menus;
-        }
-        const addNewMenu = (newMenu) => {
-            menus.push(newMenu);
-        }
-        return {
-            showAll, addNewMenu
-        }
-    }
-
+    
     render() {
         return (
             <Container className="p-2">
@@ -74,15 +69,15 @@ class MenuAdd extends Component {
                         <Form onSubmit={this.handleSubmit}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Menu ID</Form.Label>
-                                <Form.Control type="text" placeholder="insert menu id" onChange={this.handleChangeId}/>
+                                <Form.Control type="text" placeholder="001" onChange={this.handleChangeId}/>
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Menu Name</Form.Label>
-                                <Form.Control type="text" placeholder="insert menu name" onChange={this.handleChangeName}/>
+                                <Form.Control type="text" placeholder="Fried Ice" onChange={this.handleChangeName}/>
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Price</Form.Label>
-                                <Form.Control type="text" placeholder="insert menu price" onChange={this.handleChangePrice}/>
+                                <Form.Control type="text" placeholder="2000" onChange={this.handleChangePrice}/>
                             </Form.Group>
                             <div>
                                 <Button className={"w-25 m-1"} variant="warning" type="button" onClick={this.props.onCancelForm}>Cancel</Button>
