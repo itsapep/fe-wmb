@@ -1,3 +1,4 @@
+import "./login_view.css"
 import { Component } from "react";
 
 class Login extends Component {
