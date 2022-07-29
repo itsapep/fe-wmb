@@ -1,6 +1,7 @@
 import { Component } from "react";
 import Navbar from "../../shared/component/navbar";
 import MenuView from "../Menu/menu_view";
+import TableView from "../Table/table_view";
 import Dashboard from "./dashboard";
 
 class DashboardView extends Component {
@@ -25,7 +26,7 @@ class DashboardView extends Component {
                 <div className="d-flex flex-column justify-content-between h-100">
                     <div>
                         {this.state.page === "menus" ? <MenuView/> : 
-                        this.state.page === "tables" ? <h1>tables</h1> : 
+                        this.state.page === "tables" ? <TableView/> : 
                         <Dashboard/>}
                     </div>
                 </div>
