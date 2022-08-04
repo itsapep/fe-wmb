@@ -1,13 +1,9 @@
 import { Component } from "react";
 import { Button, Card, Container, Form} from "react-bootstrap";
-import menu from "./menu";
+import { withLoading } from "../../shared/component/WithLoading";
+import MenuCRUD from "./menu_crud";
+import { menu } from "./menu_model";
 
-
-let menus = [
-    menu('001', 'Nasi Putih', 3000),
-    menu('002', 'Nasi Merah', 6000),
-    menu('003', 'Nasi Kuning', 10000),
-];
 class MenuAdd extends Component {
     constructor(props) {
         super(props)
@@ -17,24 +13,7 @@ class MenuAdd extends Component {
             menuPrice: '',
             isValid: false
         }
-    }
-
-    static showAll = () => {
-        return menus;
-    }
-
-    static deleteMenu = (menuId) => {
-        const newListMenus = menus.filter(data => data.menuId !== menuId);
-        while (menus.length > 0) {
-            menus.pop();
-        }
-        for (let i = 0; i < newListMenus.length; i++) {
-            menus.push(newListMenus[i])
-        }
-    }
-
-    addNewMenu = (newMenu) => {
-        menus.push(newMenu);
+        this.crud = MenuCRUD();
     }
 
     handleChangeId = (e) => {
@@ -55,11 +34,18 @@ class MenuAdd extends Component {
         }, this.validate)
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {menuId, menuName, menuPrice} = this.state;
-        this.addNewMenu(menu(menuId, menuName, menuPrice));
-        this.props.onCancelForm();
+        this.props.onShowLoading(true)
+        try {
+            await this.crud.addNewMenu(menu(menuId, menuName, menuPrice));
+            this.props.onCancelForm();
+            this.props.onShowLoading(false);
+        } catch (error) {
+            this.props.onShowLoading(false);
+            this.props.onShowError(error.message);
+        }
     }
 
     validate = () => {
@@ -101,4 +87,4 @@ class MenuAdd extends Component {
     }
 }
 
-export default MenuAdd;
+export default withLoading(MenuAdd);

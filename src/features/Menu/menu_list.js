@@ -3,29 +3,46 @@ import {faAdd} from "@fortawesome/free-solid-svg-icons";
 import {faEraser} from "@fortawesome/free-solid-svg-icons/faEraser";
 import { Component } from "react";
 import { Button, Container, Table } from "react-bootstrap";
-import MenuAdd from "./menu_add";
+import { withLoading } from "../../shared/component/WithLoading";
+import MenuCRUD from "./menu_crud";
 
 class MenuList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            menus: []
+            currentMenus: [],
+        }
+        this.crud = MenuCRUD();
+    }
+
+    onGetMenu = async () => {
+        this.props.onShowLoading(true);
+        try {
+            const response = await this.crud.showAll();
+            this.props.onShowLoading(false);
+            this.setState({
+                currentMenus: [...response]
+            })
+        } catch (e) {
+            this.props.onShowError(e.message);
         }
     }
 
     componentDidMount() {
-        this.setState({
-            menus: MenuAdd.showAll()
-        })
+        this.onGetMenu()
     }
 
-    handleDelete = (id) => {
+    handleDelete = async (id) => {
         const result = window.confirm('Are you sure want to delete ?');
+        this.props.onShowLoading(true);
         if (result) {
-            MenuAdd.deleteMenu(id);
-            this.setState({
-                menus: MenuAdd.showAll()
-            })
+            try {
+                await this.crud.deleteMenu(id);
+                this.props.onShowLoading(false);
+                await this.onGetMenu()
+            } catch (error) {
+                this.props.onShowError(false);
+            }
         }
     }
 
@@ -50,18 +67,20 @@ class MenuList extends Component {
                     </thead>
                     <tbody>
                         {
-                            this.state.menus.map((menu, index) => {
-                                return <tr key={menu.menuId}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{menu.menuName}</td>
-                                    <td>{menu.menuPrice.toLocaleString()}</td>
-                                    <td style={{textAlign: "center"}}>
-                                        <Button size="sm" variant="danger" onClick={() => this.handleDelete(menu.menuId)}>
-                                            <FontAwesomeIcon icon={faEraser}/>
-                                            <span className="p-2">Delete</span>
-                                        </Button>
-                                    </td>
-                                </tr>
+                            this.state.currentMenus.map((menu, index) => {
+                                return (
+                                    <tr key={menu.menuId}>
+                                        <th scope="row">{index + 1}</th>
+                                        <td>{menu.menuName}</td>
+                                        <td>{menu.menuPrice.toLocaleString()}</td>
+                                        <td style={{textAlign: "center"}}>
+                                            <Button size="sm" variant="danger" onClick={() => this.handleDelete(menu.menuId)}>
+                                                <FontAwesomeIcon icon={faEraser}/>
+                                                <span className="p-2">Delete</span>
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )
                             })
                         }
                     </tbody>
@@ -71,4 +90,4 @@ class MenuList extends Component {
     }
 }
 
-export default MenuList;
+export default withLoading(MenuList);

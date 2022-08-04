@@ -9,7 +9,8 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            logged: false
+            // logged: false
+            logged: true
         }
     }
     
@@ -18,14 +19,20 @@ class App extends Component {
 		return userCredentialInput.username === adminUserCredential.username && userCredentialInput.password === adminUserCredential.password;
 	}
 
-    login = (userCredential) => {
-        if (this.authenticate(userCredential)) {
-            this.setState({
-                logged: true
-            })
-        } else {
-            alert("Incorrect email or password")
-        }
+    login = async (userCredential) => {
+        return new Promise((resolve, reject) => { 
+            setTimeout(() => {
+                if (this.authenticate(userCredential)) {
+                    console.log(`login resolve`);
+                    resolve(this.setState({
+                        logged: true
+                    }))
+                } else {
+                    console.log(`login reject`);
+                    reject(alert("Incorrect email or password"))
+                }
+            }, 3000);
+        })
     }
 
     logout = () => {

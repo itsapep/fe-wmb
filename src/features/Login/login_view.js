@@ -2,6 +2,7 @@ import "./login_view.css"
 import { Component } from "react";
 import { userCredential } from "./userCredential";
 import { Button, Card, FloatingLabel, Form } from "react-bootstrap";
+import { withLoading } from "../../shared/component/WithLoading";
 
 class LoginView extends Component {
     constructor(props) {
@@ -47,10 +48,17 @@ class LoginView extends Component {
         }
     };
 
-    handleSubmit = (event) => {
-        const {username, password} = this.state;
-        this.props.onLogin(userCredential(username, password));
+    handleSubmit = async (event) => {
         event.preventDefault()
+        const {username, password} = this.state;
+        this.props.onShowLoading(true)
+        try {
+            await this.props.onLogin(userCredential(username, password));
+            this.props.onShowLoading(false);
+        } catch (error) {
+            this.props.onShowLoading(false);
+            this.props.onShowError(error.message);
+        }
     };
 
     validate = () => {
@@ -111,4 +119,4 @@ class LoginView extends Component {
     }
 }
 
-export default LoginView;
+export default withLoading(LoginView);

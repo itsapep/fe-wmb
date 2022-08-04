@@ -1,13 +1,7 @@
 import { Component } from "react";
-import { table } from "./table";
+import { table } from "./table_model";
 import { Button, Card, Container, Form} from "react-bootstrap";
-
-
-const tables = [
-    table('001', '001', 'Available'),
-    table('002', '002', 'Unavailable'),
-    table('003', '003', 'Available'),
-]
+import TableCRUD from "./table_crud";
 
 class TableAdd extends Component {
     constructor(props) {
@@ -18,25 +12,7 @@ class TableAdd extends Component {
             tableStatus: '',
             isValid: false
         };
-    }
-
-
-    static showAll = () => {
-        return tables;
-    }
-
-    static deleteTable = (tableId) => {
-        const newListTables = tables.filter(data => data.tableId !== tableId);
-        while (tables.length > 0) {
-            tables.pop();
-        }
-        for (let i = 0; i < newListTables.length; i++) {
-            tables.push(newListTables[i])
-        }
-    }
-    
-    addNewTable = (newTable) => {
-        tables.push(newTable);
+        this.crud = TableCRUD();
     }
 
     handleChangeId = (e) => {
@@ -68,7 +44,7 @@ class TableAdd extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const {tableId, tableNumber, tableStatus} = this.state;
-        this.addNewTable(table(tableId, tableNumber, tableStatus));
+        this.crud.addNewTable(table(tableId, tableNumber, tableStatus));
         this.props.onCancelAdd();
     }
 
