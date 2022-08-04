@@ -11,6 +11,7 @@ class MenuAdd extends Component {
             menuId : '',
             menuName: '',
             menuPrice: '',
+            category: 'food',
             isValid: false
         }
         this.crud = MenuCRUD();
@@ -36,10 +37,10 @@ class MenuAdd extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
-        const {menuId, menuName, menuPrice} = this.state;
+        const {menuId, menuName, menuPrice, category} = this.state;
         this.props.onShowLoading(true)
         try {
-            await this.crud.addNewMenu(menu(menuId, menuName, menuPrice));
+            await this.crud.addNewMenu(menu(menuId, menuName, menuPrice, category));
             this.props.onCancelForm();
             this.props.onShowLoading(false);
         } catch (error) {
@@ -74,6 +75,13 @@ class MenuAdd extends Component {
                             <Form.Group className="mb-3">
                                 <Form.Label>Price</Form.Label>
                                 <Form.Control type="text" placeholder="2000" onChange={this.handleChangePrice}/>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Category</Form.Label>
+                                <Form.Select>
+                                    <option value='food'>Food</option>
+                                    <option value='beverage'>Beverage</option>
+                                </Form.Select>
                             </Form.Group>
                             <div>
                                 <Button className={"w-25 m-1"} variant="warning" type="button" onClick={this.props.onCancelForm}>Cancel</Button>

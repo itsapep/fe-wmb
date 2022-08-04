@@ -13,6 +13,7 @@ class Navbar extends Component {
                             {/* <NavItem onClick={this.props.onNavigate}>
                                 <Nav.Link>Menus</Nav.Link>
                             </NavItem> */}
+                            <Nav.Link onClick={() => this.props.onNavigate('order')}>Order</Nav.Link>
                             <Nav.Link onClick={() => this.props.onNavigate('menus')}>Menus</Nav.Link>
                             <Nav.Link onClick={() => this.props.onNavigate('tables')}>Tables</Nav.Link>
                             <NavDropdown title="Profile">

@@ -1,6 +1,22 @@
 import { menus } from "./menu_model";
 
 const MenuCRUD = () => {
+    const getMenuByCategory = async (category) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const menuByCategory = []
+                for (let menu of menus) {
+                    if (menu.category === category) {
+                        menuByCategory.push(menu)
+                    }
+                }
+                resolve(menuByCategory);
+            // }, 2000)
+        }, 0)
+
+        })
+    }
+
     const showAll = async () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -33,7 +49,7 @@ const MenuCRUD = () => {
         })
     }
     return {
-        showAll, addNewMenu, deleteMenu
+        showAll, addNewMenu, deleteMenu, getMenuByCategory
     }
 }
 
