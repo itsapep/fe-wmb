@@ -1,98 +1,85 @@
-import { Component } from "react";
+import { useState } from "react";
 import { Button, Card, Container, Form} from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { withLoading } from "../../shared/component/WithLoading";
 import MenuCRUD from "./menu_crud";
-import { menu } from "./menu_model";
+import { menu as menuModel } from "./menu_model";
 
-class MenuAdd extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            menuId : '',
-            menuName: '',
-            menuPrice: '',
-            category: 'food',
-            isValid: false
-        }
-        this.crud = MenuCRUD();
+export default function MenuAdd() {
+    const { addNewMenu } = MenuCRUD();
+    const [menu, setMenu] = useState({
+        menuId : '',
+        menuName: '',
+        menuPrice: '',
+        category: 'food',
+        isValid: false
+    })
+
+    const handleChange = (e) => {
+        const key = e.target.name;
+        const value = e.target.value;
+        setMenu({
+            ...menu,
+            [key]: value
+        }, validate)
     }
 
-    handleChangeId = (e) => {
-        this.setState({
-            menuId: e.target.value
-        }, this.validate)
-    }
-
-    handleChangeName = (e) => {
-        this.setState({
-            menuName: e.target.value,
-        }, this.validate)
-    }
-
-    handleChangePrice = (e) => {
-        this.setState({
-            menuPrice: e.target.value,
-        }, this.validate)
-    }
-
-    handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const {menuId, menuName, menuPrice, category} = this.state;
-        this.props.onShowLoading(true)
+        const {menuId, menuName, menuPrice, category} = menu;
+        // props.onShowLoading(true)
         try {
-            await this.crud.addNewMenu(menu(menuId, menuName, menuPrice, category));
-            this.props.onCancelForm();
-            this.props.onShowLoading(false);
+            await addNewMenu(menuModel(menuId, menuName, menuPrice, category));
+            // props.onCancelForm();
+            // props.onShowLoading(false);
         } catch (error) {
-            this.props.onShowLoading(false);
-            this.props.onShowError(error.message);
+            // props.onShowLoading(false);
+            // props.onShowError(errosetState
         }
     }
 
-    validate = () => {
-        if (this.state.menuId && this.state.menuName && this.state.menuPrice) {
-            this.setState({isValid: true})
+    const validate = () => {
+        if (menu.menuId && menu.menuName && menu.menuPrice) {
+            setMenu({isValid: true})
         } else {
-            this.setState({isValid: false})
+            setMenu({isValid: false})
         }
     }
-    
-    render() {
-        return (
-            <Container className="p-2">
-                <Card>
-                    <Card.Body>
-                        <Card.Title>Add Menu</Card.Title>
-                        <Form onSubmit={this.handleSubmit}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Menu ID</Form.Label>
-                                <Form.Control type="text" placeholder="001" onChange={this.handleChangeId}/>
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Menu Name</Form.Label>
-                                <Form.Control type="text" placeholder="Fried Ice" onChange={this.handleChangeName}/>
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Price</Form.Label>
-                                <Form.Control type="text" placeholder="2000" onChange={this.handleChangePrice}/>
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Category</Form.Label>
-                                <Form.Select>
-                                    <option value='food'>Food</option>
-                                    <option value='beverage'>Beverage</option>
-                                </Form.Select>
-                            </Form.Group>
-                            <div>
-                                <Button className={"w-25 m-1"} variant="warning" type="button" onClick={this.props.onCancelForm}>Cancel</Button>
-                                <Button className={"w-25 m-1"} type="submit" variant="primary" disabled={!this.state.isValid}>Submit</Button>
-                            </div>
-                        </Form>
-                    </Card.Body>
-                </Card>
-            </Container>
-        );
-    }
-}
 
-export default withLoading(MenuAdd);
+    return (
+        <Container className="p-2">
+            <Card>
+                <Card.Body>
+                    <Card.Title>Add Menu</Card.Title>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Menu ID</Form.Label>
+                            <Form.Control type="text" placeholder="001" onChange={handleChange}/>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Menu Name</Form.Label>
+                            <Form.Control type="text" placeholder="Fried Ice" onChange={handleChange}/>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Price</Form.Label>
+                            <Form.Control type="text" placeholder="2000" onChange={handleChange}/>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Category</Form.Label>
+                            <Form.Select>
+                                <option value='food'>Food</option>
+                                <option value='beverage'>Beverage</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <div>
+                            <LinkContainer to={'/main/menus'}>
+                                <Button className={"w-25 m-1"} variant="warning" type="button">Cancel</Button>
+                            </LinkContainer>
+                            <Button className={"w-25 m-1"} type="submit" variant="primary" disabled={!menu.isValid}>Submit</Button>
+                        </div>
+                    </Form>
+                </Card.Body>
+            </Card>
+        </Container>
+    );
+}

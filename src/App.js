@@ -1,53 +1,44 @@
-// import logo from './logo.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Component } from 'react';
-import DashboardView from './features/Dashboard/dashboard_view';
-import LoginView from './features/Login/login_view';
-import { userCredential } from './features/Login/userCredential';
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "./features/Dashboard/dashboard";
+import LoginView from "./features/Login/login_view";
+import MenuAdd from "./features/Menu/menu_add";
+import MenuList from "./features/Menu/menu_list";
+import OrderView from "./features/Order/order_view";
+import TableAdd from "./features/Table/table_add";
+import TableList from "./features/Table/table_list";
+import Navbar from "./shared/component/navbar";
+import ProtectedRoute from "./shared/component/ProtectedRoute";
+import { AuthProvider } from "./shared/hook/useAuth";
 
-class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            // logged: false
-            logged: true
-        }
-    }
-    
-	authenticate = (userCredentialInput) => {
-		const adminUserCredential = userCredential('admin@example.com', '12345678');
-		return userCredentialInput.username === adminUserCredential.username && userCredentialInput.password === adminUserCredential.password;
-	}
+export default function xApp() {
+    return (
+        <AuthProvider>
+            <Routes>
+                <Route index element={<LoginView></LoginView>}></Route>
+                <Route element={<ProtectedRoute></ProtectedRoute>}>
+                    <Route path="main" element={<Navbar></Navbar>}>
+                        <Route index element={<Dashboard></Dashboard>}></Route>
+                        <Route path="order" element={<OrderView></OrderView>}>
+                        </Route>
+                        <Route path="menus" element={<MenuList></MenuList>}>
+                            <Route path="new" element={<MenuAdd></MenuAdd>}></Route>
+                        </Route>
+                        <Route path="tables" element={<TableList></TableList>}>
+                            <Route path="new" element={<TableAdd></TableAdd>}></Route>
+                        </Route>
 
-    login = async (userCredential) => {
-        return new Promise((resolve, reject) => { 
-            setTimeout(() => {
-                if (this.authenticate(userCredential)) {
-                    console.log(`login resolve`);
-                    resolve(this.setState({
-                        logged: true
-                    }))
-                } else {
-                    console.log(`login reject`);
-                    reject(alert("Incorrect email or password"))
-                }
-            }, 3000);
-        })
-    }
+                    </Route>
+                </Route>
+                <Route
+                    path="*"
+                    element={
+                        <main style={{padding: "1rem"}}>
+                            <p>Oopss... page not found</p>
+                        </main>
+                    }>
 
-    logout = () => {
-        this.setState({
-            logged: false
-        })
-    }
-
-    render() {
-        return (
-            <div>
-                {this.state.logged ? <DashboardView onLogout={this.logout}/> : <LoginView onLogin={this.login}/>}
-            </div>
-        );
-    }
+                </Route>
+            </Routes>
+        </AuthProvider>
+    )
 }
-
-export default App;
